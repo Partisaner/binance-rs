@@ -1,6 +1,7 @@
 use crate::errors::Result;
 use std::collections::BTreeMap;
 use std::time::{SystemTime, UNIX_EPOCH};
+use chrono::Utc;
 use error_chain::bail;
 use serde_json::Value;
 
@@ -47,11 +48,6 @@ fn get_timestamp(start: SystemTime) -> Result<u64> {
 }
 
 pub fn is_start_time_valid(start_time: &u64) -> bool {
-    let current_time = SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs();
-
-    if start_time > &current_time {
-        false
-    } else {
-        true
-    }
+    let current_time = Utc::now().timestamp() as u64;
+    start_time < &current_time
 }
